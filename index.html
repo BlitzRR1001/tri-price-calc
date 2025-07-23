@@ -1,92 +1,127 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tri & Price Calculator</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
-    h1 { color: #333; }
-    textarea, input, select, button {
-      margin-top: 10px; display: block; width: 100%; padding: 10px;
-    }
-    .output { background: #fff; padding: 10px; margin-top: 20px; border: 1px solid #ccc; }
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    h2 { margin-top: 30px; }
+    ul { columns: 2; margin: 0 0 1em 0; padding: 0; }
+    li { list-style: none; margin-bottom: 4px; }
+    input[type="text"] { width: 300px; padding: 4px; }
+    label { display: block; margin: 6px 0; }
+    .results { margin-top: 30px; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body>
-  <h1>Tri & Price Calculator</h1>
-  <label for="slots">Enter Slots (comma-separated):</label>
-  <input type="text" id="slots" placeholder="e.g., TorsoFB, Legs">
+  <h1>Tri Limit & Price Estimator</h1>
 
-  <label for="mode">Mode:</label>
-  <select id="mode">
-    <option value="tris">Tri Calc</option>
-    <option value="price">Price Calc</option>
-  </select>
+  <h2>Available Item Slots</h2>
+  <ul id="slotList"></ul>
+  <label for="selectedSlots">Enter slots to use (comma-separated):</label>
+  <input type="text" id="selectedSlots" placeholder="e.g., TorsoFB, Legs, Hat" />
 
-  <label for="modifiers">Modifiers (space-separated, optional):</label>
-  <input type="text" id="modifiers" placeholder="e.g., Emissive Gold Fancy">
+  <h2>Available Modifiers</h2>
+  <ul id="modifierList"></ul>
+  <label for="selectedModifiers">Enter modifiers to apply (comma-separated):</label>
+  <input type="text" id="selectedModifiers" placeholder="e.g., Emissive, Gold" />
 
-  <button onclick="calculate()">Calculate</button>
-
-  <div class="output" id="output"></div>
+  <div class="results">
+    <h2>Results</h2>
+    <p id="triResults"></p>
+    <p id="priceResult"></p>
+  </div>
 
   <script>
     const triLimits = {
-      "TorsoFB": { LOD0: 3000, LOD1: 2000, LOD2: 750 },
-      "TorsoMB": { LOD0: 2200, LOD1: 1500, LOD2: 500 },
-      "Legs": { LOD0: 2500, LOD1: 1650, LOD2: 625 },
-      "Shoe": { LOD0: 2000, LOD1: 1300, LOD2: 500 },
-      "Wrist": { LOD0: 1500, LOD1: 1000, LOD2: 300 },
-      "Belt": { LOD0: 1000, LOD1: 650, LOD2: 250 },
-      "Ear": { LOD0: 750, LOD1: 475, LOD2: 150 },
-      "Eye": { LOD0: 1000, LOD1: 650, LOD2: 250 },
-      "Shoulder": { LOD0: 1000, LOD1: 650, LOD2: 250 },
-      "Hat": { LOD0: 1000, LOD1: 650, LOD2: 250 },
-      "Neck": { LOD0: 1000, LOD1: 650, LOD2: 250 },
-      "Hair": { LOD0: 1000, LOD1: 650, LOD2: 250 },
-      "Mouth": { LOD0: 750, LOD1: 475, LOD2: 150 }
+      TorsoFB: { LOD0: 3000, LOD1: 2000, LOD2: 750 },
+      TorsoMB: { LOD0: 2200, LOD1: 1500, LOD2: 500 },
+      Legs: { LOD0: 2500, LOD1: 1650, LOD2: 625 },
+      Shoe: { LOD0: 2000, LOD1: 1300, LOD2: 500 },
+      Wrist: { LOD0: 1500, LOD1: 1000, LOD2: 300 },
+      Belt: { LOD0: 1000, LOD1: 650, LOD2: 250 },
+      Ear: { LOD0: 750, LOD1: 475, LOD2: 150 },
+      Eye: { LOD0: 1000, LOD1: 650, LOD2: 250 },
+      Shoulder: { LOD0: 1000, LOD1: 650, LOD2: 250 },
+      Hat: { LOD0: 1000, LOD1: 650, LOD2: 250 },
+      Neck: { LOD0: 1000, LOD1: 650, LOD2: 250 },
+      Hair: { LOD0: 1000, LOD1: 650, LOD2: 250 },
+      Mouth: { LOD0: 750, LOD1: 475, LOD2: 150 }
     };
 
     const slotPrices = {
-      "TorsoFB": 1500, "TorsoMB": 1300, "Legs": 1200, "Shoe": 1000, "Wrist": 800,
-      "Belt": 600, "Ear": 300, "Eye": 500, "Shoulder": 700, "Hat": 400,
-      "Neck": 450, "Hair": 550, "Mouth": 300
+      TorsoFB: 1000,
+      TorsoMB: 1000,
+      Legs: 800,
+      Shoe: 800,
+      Wrist: 700,
+      Belt: 700,
+      Ear: 500,
+      Eye: 500,
+      Shoulder: 1000,
+      Hat: 800,
+      Neck: 500,
     };
 
     const modifiers = {
-      "Fancy": 1.6, "Novelty": 1.6, "Gold": 1.2, "Silver": 1.1,
-      "Emissive": 2, "Shiny": 1.4, "High": 1.2, "Elevated": 1.8,
-      "Helmet": 2, "Animated": 2.4
+      Fancy: 1.6,
+      Novelty: 1.6,
+      Gold: 1.2,
+      Silver: 1.1,
+      Emissive: 2.0,
+      Shiny: 1.4,
+      "High Fidelity": 1.2,
+      "Elevated Shoe": 1.8,
+      Helmet: 2.0,
+      Animated: 2.4
     };
 
-    function calculate() {
-      const slots = document.getElementById("slots").value.split(',').map(s => s.trim());
-      const mode = document.getElementById("mode").value;
-      const mods = document.getElementById("modifiers").value.split(' ').map(m => m.trim()).filter(Boolean);
-      const output = document.getElementById("output");
+    const slotListEl = document.getElementById('slotList');
+    const modifierListEl = document.getElementById('modifierList');
 
-      if (mode === "tris") {
-        let result = { LOD0: 0, LOD1: 0, LOD2: 0 };
-        for (const slot of slots) {
-          const tri = triLimits[slot];
-          if (tri) {
-            result.LOD0 += tri.LOD0;
-            result.LOD1 += tri.LOD1;
-            result.LOD2 += tri.LOD2;
-          }
+    Object.keys(triLimits).forEach(slot => {
+      const li = document.createElement('li');
+      li.textContent = slot;
+      slotListEl.appendChild(li);
+    });
+
+    Object.entries(modifiers).forEach(([mod, val]) => {
+      const li = document.createElement('li');
+      li.textContent = `${mod} (×${val})`;
+      modifierListEl.appendChild(li);
+    });
+
+    function calculate() {
+      const slots = document.getElementById('selectedSlots').value.split(',').map(s => s.trim());
+      const mods = document.getElementById('selectedModifiers').value.split(',').map(s => s.trim());
+
+      let tris = { LOD0: 0, LOD1: 0, LOD2: 0 };
+      let price = 0;
+
+      slots.forEach(slot => {
+        const t = triLimits[slot];
+        if (t) {
+          tris.LOD0 += t.LOD0;
+          tris.LOD1 += t.LOD1;
+          tris.LOD2 += t.LOD2;
         }
-        output.innerHTML = `<strong>Tri Limits:</strong><br>LOD0: ${result.LOD0}<br>LOD1: ${result.LOD1}<br>LOD2: ${result.LOD2}`;
-      } else {
-        let base = 0;
-        for (const slot of slots) {
-          base += slotPrices[slot] || 0;
-        }
-        let factor = mods.reduce((acc, m) => acc * (modifiers[m] || 1), 1);
-        let finalPrice = Math.round(base * factor);
-        output.innerHTML = `<strong>Base Price:</strong> ${base}<br><strong>Modifiers:</strong> x${factor.toFixed(2)}<br><strong>Estimated Price:</strong> ${finalPrice}`;
-      }
+        price += slotPrices[slot] || 0;
+      });
+
+      let modifierTotal = 1;
+      mods.forEach(mod => {
+        if (modifiers[mod]) modifierTotal *= modifiers[mod];
+      });
+
+      const finalPrice = Math.round(price * modifierTotal);
+
+      document.getElementById('triResults').textContent = `LOD0: ${tris.LOD0} tris, LOD1: ${tris.LOD1} tris, LOD2: ${tris.LOD2} tris`;
+      document.getElementById('priceResult').textContent = `Estimated Minimum Price: ${finalPrice} tokens`;
     }
+
+    document.getElementById('selectedSlots').addEventListener('input', calculate);
+    document.getElementById('selectedModifiers').addEventListener('input', calculate);
   </script>
 </body>
 </html>
