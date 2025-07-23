@@ -75,6 +75,7 @@
       <h2>Results</h2>
       <p id="triResults"></p>
       <p id="priceResult"></p>
+      <p id="materialSlots"></p>
     </div>
   </div>
 
@@ -91,8 +92,8 @@
       Shoulder: { LOD0: 1000, LOD1: 650, LOD2: 250 },
       Hat: { LOD0: 1000, LOD1: 650, LOD2: 250 },
       Neck: { LOD0: 1000, LOD1: 650, LOD2: 250 },
-      Hair: { LOD0: 1000, LOD1: 650, LOD2: 250 },
-      Mouth: { LOD0: 750, LOD1: 475, LOD2: 150 }
+      Hair: { LOD0: 1300, LOD1: 850, LOD2: 250 },
+      Mouth: { LOD0: 1300, LOD1: 850, LOD2: 250 }
     };
 
     const slotPrices = {
@@ -109,6 +110,12 @@
       Neck: 500,
       Hair: 350,
       Mouth: 350
+    };
+
+    const materialSlotOverrides = {
+      Hair: 2,
+      Mouth: 2,
+      Eye: 2
     };
 
     const modifiers = {
@@ -161,6 +168,7 @@
 
       let tris = { LOD0: 0, LOD1: 0, LOD2: 0 };
       let price = 0;
+      let materialSlots = 0;
 
       slots.forEach(slot => {
         const t = triLimits[slot];
@@ -170,6 +178,7 @@
           tris.LOD2 += t.LOD2;
         }
         price += slotPrices[slot] || 0;
+        materialSlots += materialSlotOverrides[slot] || 1;
       });
 
       let modifierTotal = 1;
@@ -181,6 +190,7 @@
 
       document.getElementById('triResults').textContent = `LOD0: ${tris.LOD0} tris, LOD1: ${tris.LOD1} tris, LOD2: ${tris.LOD2} tris`;
       document.getElementById('priceResult').textContent = `Estimated Minimum Price: ${finalPrice} tokens`;
+      document.getElementById('materialSlots').textContent = `Material Slots Used: ${materialSlots}`;
     }
 
     document.getElementById('selectedSlots').addEventListener('input', calculate);
