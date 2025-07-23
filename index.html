@@ -42,7 +42,16 @@
     input[type="text"] {
       width: 100%;
       padding: 6px;
+      margin-bottom: 10px;
+    }
+    .clear-button {
       margin-bottom: 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
     }
     label {
       display: block;
@@ -65,11 +74,13 @@
     <div class="button-list" id="slotButtons"></div>
     <label for="selectedSlots">Enter slots to use (comma-separated):</label>
     <input type="text" id="selectedSlots" placeholder="e.g., TorsoFB, Legs, Hat" />
+    <button class="clear-button" onclick="clearSlots()">Clear Slots</button>
 
     <h2>Available Modifiers</h2>
     <div class="button-list" id="modifierButtons"></div>
     <label for="selectedModifiers">Enter modifiers to apply (comma-separated):</label>
     <input type="text" id="selectedModifiers" placeholder="e.g., Emissive, Gold" />
+    <button class="clear-button" onclick="clearModifiers()">Clear Modifiers</button>
 
     <div class="results">
       <h2>Results</h2>
@@ -161,6 +172,16 @@
       };
       modifierButtonsEl.appendChild(button);
     });
+
+    function clearSlots() {
+      document.getElementById('selectedSlots').value = '';
+      calculate();
+    }
+
+    function clearModifiers() {
+      document.getElementById('selectedModifiers').value = '';
+      calculate();
+    }
 
     function calculate() {
       const slots = document.getElementById('selectedSlots').value.split(',').map(s => s.trim());
