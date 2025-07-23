@@ -5,32 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tri & Price Calculator</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
-    h2 { margin-top: 30px; }
-    ul { columns: 2; margin: 0 0 1em 0; padding: 0; }
-    li { list-style: none; margin-bottom: 4px; }
-    input[type="text"] { width: 300px; padding: 4px; }
-    label { display: block; margin: 6px 0; }
-    .results { margin-top: 30px; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+    }
+    h2 {
+      margin-top: 30px;
+    }
+    .flex-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin: 6px 0;
+    }
+    .results {
+      margin-top: 30px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
   </style>
 </head>
 <body>
-  <h1>Tri Limit & Price Estimator</h1>
+  <div class="container">
+    <h1>Tri Limit & Price Estimator</h1>
 
-  <h2>Available Item Slots</h2>
-  <ul id="slotList"></ul>
-  <label for="selectedSlots">Enter slots to use (comma-separated):</label>
-  <input type="text" id="selectedSlots" placeholder="e.g., TorsoFB, Legs, Hat" />
+    <h2>Available Item Slots</h2>
+    <div class="flex-list">
+      <ul id="slotList"></ul>
+    </div>
+    <label for="selectedSlots">Enter slots to use (comma-separated):</label>
+    <input type="text" id="selectedSlots" placeholder="e.g., TorsoFB, Legs, Hat" />
 
-  <h2>Available Modifiers</h2>
-  <ul id="modifierList"></ul>
-  <label for="selectedModifiers">Enter modifiers to apply (comma-separated):</label>
-  <input type="text" id="selectedModifiers" placeholder="e.g., Emissive, Gold" />
+    <h2>Available Modifiers</h2>
+    <div class="flex-list">
+      <ul id="modifierList"></ul>
+    </div>
+    <label for="selectedModifiers">Enter modifiers to apply (comma-separated):</label>
+    <input type="text" id="selectedModifiers" placeholder="e.g., Emissive, Gold" />
 
-  <div class="results">
-    <h2>Results</h2>
-    <p id="triResults"></p>
-    <p id="priceResult"></p>
+    <div class="results">
+      <h2>Results</h2>
+      <p id="triResults"></p>
+      <p id="priceResult"></p>
+    </div>
   </div>
 
   <script>
@@ -62,6 +107,8 @@
       Shoulder: 1000,
       Hat: 800,
       Neck: 500,
+      Hair: 350,
+      Mouth: 350
     };
 
     const modifiers = {
