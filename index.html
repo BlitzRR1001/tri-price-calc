@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tri & Price Calculator</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tri &amp; Price Calculator</title>
+<style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
@@ -67,30 +68,26 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Tri Limit & Price Estimator</h1>
-
-    <h2>Available Item Slots</h2>
-    <div class="button-list" id="slotButtons"></div>
-    <label for="selectedSlots">Enter slots to use (comma-separated):</label>
-    <input type="text" id="selectedSlots" placeholder="e.g., TorsoFB, Legs, Hat" />
-    <button class="clear-button" onclick="clearSlots()">Clear Slots</button>
-
-    <h2>Available Modifiers</h2>
-    <div class="button-list" id="modifierButtons"></div>
-    <label for="selectedModifiers">Enter modifiers to apply (comma-separated):</label>
-    <input type="text" id="selectedModifiers" placeholder="e.g., Emissive, Gold" />
-    <button class="clear-button" onclick="clearModifiers()">Clear Modifiers</button>
-
-    <div class="results">
-      <h2>Results</h2>
-      <p id="triResults"></p>
-      <p id="priceResult"></p>
-      <p id="materialSlots"></p>
-    </div>
-  </div>
-
-  <script>
+<div class="container">
+<h1>Tri Limit &amp; Price Estimator</h1>
+<h2>Available Item Slots</h2>
+<div class="button-list" id="slotButtons"></div>
+<label for="selectedSlots">Enter slots to use (comma-separated):</label>
+<input id="selectedSlots" placeholder="e.g., TorsoFB, Legs, Hat" type="text"/>
+<button class="clear-button" onclick="clearSlots()">Clear Slots</button>
+<h2>Available Modifiers</h2>
+<div class="button-list" id="modifierButtons"></div>
+<label for="selectedModifiers">Enter modifiers to apply (comma-separated):</label>
+<input id="selectedModifiers" placeholder="e.g., Emissive, Gold" type="text"/>
+<button class="clear-button" onclick="clearModifiers()">Clear Modifiers</button>
+<div class="results">
+<h2>Results</h2>
+<p id="triResults"></p>
+<p id="priceResult"></p>
+<p id="materialSlots"></p>
+</div>
+</div>
+<script>
     const triLimits = {
       TorsoFB: { LOD0: 3000, LOD1: 2000, LOD2: 750 },
       TorsoMB: { LOD0: 2200, LOD1: 1500, LOD2: 500 },
@@ -147,7 +144,7 @@
 
     Object.keys(triLimits).forEach(slot => {
       const button = document.createElement('button');
-      button.textContent = slot;
+      button.textContent = (slot === 'Wrist') ? 'Wrist (Both Hands)' : slot;
       button.onclick = () => {
         let current = document.getElementById('selectedSlots').value.split(',').map(s => s.trim());
         if (!current.includes(slot)) {
